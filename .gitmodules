@@ -1,0 +1,9 @@
+[submodule "LuckPerms"]
+	path = LuckPerms
+	url = /home/matias/repos/LuckPerms
+[submodule "rest-api"]
+	path = rest-api
+	url = /home/matias/repos/rest-api
+[submodule "bot-discord"]
+	path = bot-discord
+	url = /home/matias/repos/bot-discord
