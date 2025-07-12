@@ -1,9 +1,12 @@
 [submodule "LuckPerms"]
 	path = LuckPerms
-	url = git@github.com:matienzo01/LuckPerms.git
+	url = ./LuckPerms
+  remote = git@github.com:matienzo01/LuckPerms.git
 [submodule "rest-api"]
 	path = rest-api
-	url = git@github.com:matienzo01/rest-api.git
+	url = ./rest-api
+  remote = git@github.com:matienzo01/rest-api.git
 [submodule "bot-discord"]
 	path = bot-discord
-	url = git@github.com:matienzo01/bot-discord.git
+	url = ./bot-discord
+  remote = git@github.com:matienzo01/bot-discord.git
