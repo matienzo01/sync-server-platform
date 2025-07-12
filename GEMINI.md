@@ -12,6 +12,32 @@ To achieve this, the project is divided into three main components:
 
 3.  **Synchronization Service (`/home/matias/repos/bot-discord`):** A backend service built with Node.js and TypeScript that acts as the central orchestrator. It connects to both the Discord API and the modified LuckPerms REST API to handle the synchronization logic. It will listen for events from both platforms (e.g., role changes in Discord, permission changes in LuckPerms) and trigger the corresponding updates on the other platform.
 
+## Architectural Design
+
+Two primary architectural models are being considered for the platform. The initial plan is to develop the simpler option first and evaluate the feasibility of the more complex model later.
+
+### Option 1: Decentralized Model (The "Simple Option")
+
+In this model, each consumer is responsible for hosting their own LuckPerms server and database.
+-   **Mechanism:** Consumers provide their LuckPerms database credentials to our synchronization service.
+-   **Our Role:** The service connects directly to each consumer's database on-demand to read or write permissions data.
+-   **Pros:**
+    -   Faster initial development and implementation.
+-   **Cons:**
+    -   **Security Risk:** Requires storing and managing sensitive database credentials for multiple tenants.
+    -   **Complexity:** Introduces challenges in managing a multi-tenant architecture with numerous direct database connections.
+
+### Option 2: Centralized API Model (The "Complex Option")
+
+This model involves a centralized database managed by our platform, abstracting the data storage from the consumers.
+-   **Mechanism:** This would require a significant modification to the LuckPerms core plugin to add a new "REST API" storage provider. Consumers would configure their game server's LuckPerms plugin with an API key provided by our platform.
+-   **Our Role:** All data interactions from the consumer's server would be routed through our secure, centralized REST API, which then communicates with our database.
+-   **Pros:**
+    -   **Enhanced Security:** No need to store consumer database credentials; authentication is handled via revocable API keys.
+    -   **Scalability & Control:** Centralized data management simplifies maintenance, backups, and feature rollouts.
+-   **Cons:**
+    -   **High Complexity:** Requires deep modification of the LuckPerms core, a complex and time-consuming task.
+
 ## Key Technologies
 
 ### Synchronization Service (bot-discord)
