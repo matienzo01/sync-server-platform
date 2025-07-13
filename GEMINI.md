@@ -38,6 +38,27 @@ This model involves a centralized database managed by our platform, abstracting 
 -   **Cons:**
     -   **High Complexity:** Requires deep modification of the LuckPerms core, a complex and time-consuming task.
 
+### Option 3: Centralized Database with Schema-per-Tenant Isolation (The "Hybrid Option")
+
+This model serves as a powerful and secure intermediate, avoiding modifications to the LuckPerms core while still providing a centralized and scalable architecture. It uses a single database instance (e.g., PostgreSQL) with logical separation for each tenant.
+
+-   **Mechanism:**
+    1.  **Tenant Provisioning:** When a new consumer registers, our platform automatically creates a dedicated database **schema** (e.g., `tenant_123`) and a dedicated database **user** (e.g., `user_123`) with a unique password.
+    2.  **LuckPerms Configuration:** The consumer configures their LuckPerms instance to connect to our central database using these credentials. The provided user has permissions *only* for its dedicated schema, ensuring data cannot be accessed by other tenants at the database level.
+    3.  **Backend Service Access:** Our backend services (`rest-api`, `bot-discord`) connect to the database using a single, privileged **service account**. This account has read/write access to *all* tenant schemas.
+
+-   **Our Role:** The application logic is responsible for ensuring that when acting on behalf of a tenant, it directs its queries to the correct schema (e.g., `SELECT * FROM tenant_123.luckperms_users;`).
+
+-   **Pros:**
+    -   **No LuckPerms Core Modification:** Leverages existing JDBC storage support in LuckPerms.
+    -   **High Security:** Strong data isolation between tenants at the database level.
+    -   **Simplified Backend:** Our services use a single, static database connection, simplifying configuration and improving connection pooling efficiency.
+    -   **Centralized Management:** We retain control over the database for maintenance and backups.
+
+-   **Cons:**
+    -   **Application-Layer Complexity:** The responsibility for tenant data isolation shifts to our backend code, which must be carefully written to query the correct schemas.
+    -   **Automated Provisioning Required:** Requires robust automation for creating and managing schemas and users for each tenant.
+
 ## Key Technologies
 
 ### Synchronization Service (bot-discord)
