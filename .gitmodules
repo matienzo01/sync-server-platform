@@ -7,3 +7,4 @@
 [submodule "bot-discord"]
 	path = bot-discord
 	url = git@github.com:matienzo01/bot-discord.git
+	branch = master
